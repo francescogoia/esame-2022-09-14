@@ -17,6 +17,9 @@ class Controller:
     def handle_graph(self, e):
         pass
 
+    def handle_analisi(self, e):
+        pass
+
 
     def handle_set_album(self, e):
         pass

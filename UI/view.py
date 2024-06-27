@@ -40,7 +40,7 @@ class View(ft.UserControl):
 
         self._ddAlbum = ft.Dropdown(label="Album", width=400, disabled=True)
 
-        self._btnAnalisi = ft.ElevatedButton(text="Analisi componente", disabled=True)
+        self._btnAnalisi = ft.ElevatedButton(text="Analisi componente", disabled=True, on_click=self._controller.handle_analisi)
 
         row2 = ft.Row([self._ddAlbum, self._btnAnalisi], alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row2)
