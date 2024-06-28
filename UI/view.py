@@ -32,9 +32,9 @@ class View(ft.UserControl):
         self._page.controls.append(self._title)
 
         self._txtDurata = ft.TextField(label="Durata")
-        self.btn_graph = ft.ElevatedButton(text="Crea Grafo", on_click=self._controller.handle_graph, width=200)
+        self.btn_graph = ft.ElevatedButton(text="Crea Grafo", on_click=self._controller.handle_graph)
 
-        row1 = ft.Row([self._txtDurata, self.btn_graph],
+        row1 = ft.Row([ft.Container(self._txtDurata, width=400), ft.Container(self.btn_graph, width=300)],
                       alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row1)
 
@@ -42,17 +42,17 @@ class View(ft.UserControl):
 
         self._btnAnalisi = ft.ElevatedButton(text="Analisi componente", disabled=True, on_click=self._controller.handle_analisi)
 
-        row2 = ft.Row([self._ddAlbum, self._btnAnalisi], alignment=ft.MainAxisAlignment.CENTER)
+        row2 = ft.Row([ft.Container(self._ddAlbum, width=400), ft.Container(self._btnAnalisi, width=300)], alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row2)
 
         self.txt_result1 = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
         self._page.controls.append(self.txt_result1)
 
-        self._txtSoglia = ft.Dropdown(label="Soglia", width=400, disabled=True)
+        self._txtSoglia = ft.TextField(label="Soglia", width=400, disabled=True)
 
         self._btnSetAlbum = ft.ElevatedButton(text="Set di Album",
                                               on_click=self._controller.handle_set_album, width=200, disabled=True)
-        row3 = ft.Row([self._txtSoglia, self._btnSetAlbum], alignment=ft.MainAxisAlignment.CENTER)
+        row3 = ft.Row([ft.Container(self._txtSoglia, width=400), ft.Container(self._btnSetAlbum, width=300)], alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row3)
 
         # List View where the reply is printed

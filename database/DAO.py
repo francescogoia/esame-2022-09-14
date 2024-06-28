@@ -1,57 +1,45 @@
 from database.DB_connect import DBConnect
+from model.album import Album
 
 
 class DAO():
     def __init__(self):
         pass
 
+
+
     @staticmethod
-    def getAllBrands():
+    def getAllNodes():
         conn = DBConnect.get_connection()
         cursor = conn.cursor(dictionary=True)
         query = """
-            select distinct Product_brand 
-            from go_products gp
-            order by Product_brand asc
+            select a.AlbumId, a.Title, sum(t.Milliseconds) as durata
+            from album a, track t 
+            where t.AlbumId = a.AlbumId 
+            group by a.AlbumId , a.Title 
         """
         cursor.execute(query)
         result = []
         for row in cursor:
-            result.append(row["Product_brand"])
+            result.append(Album(**row))
         cursor.close()
         conn.close()
         return result
 
     @staticmethod
-    def getAllNodes(brand):
+    def getEdge(u, v):
         conn = DBConnect.get_connection()
         cursor = conn.cursor(dictionary=True)
         query = """
-            select Product_number 
-            from go_products gp 
-            where Product_brand = %s
-        """
-        cursor.execute(query, (brand,))
-        result = []
-        for row in cursor:
-            result.append(row["Product_number"])
-        cursor.close()
-        conn.close()
-        return result
-
-    @staticmethod
-    def getEdge(u, v, anno):
-        conn = DBConnect.get_connection()
-        cursor = conn.cursor(dictionary=True)
-        query = """
-                select gds1.Product_number as p1, gds2.Product_number as p2, count(distinct gds1.Retailer_code) as numRivenditori
-                from go_daily_sales gds1, go_daily_sales gds2
-                where gds1.Product_number = %s and gds2.Product_number = %s
-                    and gds1.`Date` = gds2.`Date` and gds1.Retailer_code = gds2.Retailer_code
-                    and year(gds1.`Date`) = year(gds2.`Date`) and year(gds1.`Date`) = %s
+            select distinctrow a1.AlbumId as a1,  a2.AlbumId as a2
+            from album a1, album a2, playlisttrack p1, playlisttrack p2, track t1, track t2
+            where t1.AlbumId = a1.AlbumId and t2.AlbumId = a2.AlbumId
+                and p1.TrackId = t1.TrackId and p2.TrackId = t2.TrackId
+                and p1.PlaylistId = p2.PlaylistId
+                and a1.AlbumId = %s and a2.AlbumId = %s
                 """
         try:
-            cursor.execute(query, (u, v, anno,))
+            cursor.execute(query, (u, v, ))
 
         except Exception as e:
             print(e)
@@ -60,7 +48,7 @@ class DAO():
             return []
         result = []
         for row in cursor:
-            result.append((row["p1"], row["p2"], row["numRivenditori"]))
+            result.append((row["a1"], row["a2"]))
         cursor.close()
         conn.close()
         return result
